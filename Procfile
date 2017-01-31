@@ -1,0 +1,1 @@
+web:    java $JAVA_OPTS -jar webapprunner/jetty-runner.jar --port $PORT target/ReservaHotelWeb-1.0-SNAPSHOT.war
