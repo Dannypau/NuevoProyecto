@@ -9,22 +9,47 @@ package com.epn.edu.reservahotelweb;
  *
  * @author Daniela Ramos
  */
-//import com.epn.edu.reservahotel.clientes.TipoHabitacionFarcadeRest;
-//import com.epn.edu.reservahotel.entidades.TipoHabitacion;
-//import com.google.gson.Gson;
-//import com.google.gson.GsonBuilder;
-//import com.google.gson.reflect.TypeToken;
+import com.epn.edu.reservahotel.entidades.Habitacion;
+import com.epn.edu.reservahotel.entidades.TipoHabitacion;
+import com.epn.edu.reservahotel.jpacontroller.HabitacionJpaController;
+import com.epn.edu.reservahotel.jpacontroller.ReHabitacionJpaController;
+import com.epn.edu.reservahotel.jpacontroller.TipoHabitacionJpaController;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import javax.transaction.UserTransaction;
+import org.primefaces.event.SelectEvent;
 
-
+@ViewScoped
 @ManagedBean(name = "tipoHabitacionView")
-public class TipoHabitacionView {
+public class TipoHabitacionView implements Serializable {
 
-//     List<TipoHabitacion> listTipoHbitacion;
-//    GsonBuilder gsonBuilder = new GsonBuilder();
-//    Gson gson = gsonBuilder.create();
+    private List<TipoHabitacion> listTipoHbitacion;
+    private List<Habitacion> lstHabitacion;
+    private String selectedTipoHabitacion;
+    private Date selectedFechaInicio;
+    private Date selectedFechaFin;
+    private Date fechaActual;
+    private String cabeceraTabla;
+    private List<Habitacion> selectedHabitaciones;
+    private SimpleDateFormat dateFormat;
+    List<Integer> lstIdHabitacionesDisponibles;
+    TipoHabitacionJpaController tipoHabitacionJpaController;
+    ReHabitacionJpaController reHabitacionJpaController;
+    HabitacionJpaController habitacionJpaController;
+
+    @PersistenceUnit(unitName = "com.epn.edu_ReservaHotelWeb_war_1.0-SNAPSHOTPU")
+    private EntityManagerFactory emf;
+    @Resource
+    private UserTransaction utx;
 
     public TipoHabitacionView() {
     }
@@ -33,25 +58,154 @@ public class TipoHabitacionView {
     public void init() {
         //llenar cosas al iniciar
 
-        //TipoHabitacionFarcadeRest tipoHabitacion = new TipoHabitacionFarcadeRest();
-//        
-//        String tiposHabitacion=tipoHabitacion.findAll_JSON(String.class);
-//        
-//        listTipoHbitacion= gson.fromJson(tiposHabitacion, new TypeToken<List<TipoHabitacion>>(){}.getType());
-//        tamanio=listTipoHbitacion.size()+"";
-       tamanio = "54";
-       // System.out.println("Tamanio" + listTipoHbitacion.size());
+        tipoHabitacionJpaController = new TipoHabitacionJpaController(utx, emf);
+        habitacionJpaController = new HabitacionJpaController(utx, emf);
+        reHabitacionJpaController = new ReHabitacionJpaController(utx, emf);
+        listTipoHbitacion = tipoHabitacionJpaController.findTipoHabitacionEntities();
+        fechaActual = Calendar.getInstance().getTime();
+//        lstIdHabitacionesDisponibles = reHabitacionJpaController.findIdHabitacionByFecha(fechaActual);
+//        Integer[] ids = new Integer[lstIdHabitacionesDisponibles.size()];
+//        for (Integer idHabitacionesDisponible : lstIdHabitacionesDisponibles) {
+//            ids[lstIdHabitacionesDisponibles.indexOf(idHabitacionesDisponible)] = idHabitacionesDisponible;
+//        }
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        cabeceraTabla = "Habitaciones disponibles para el " + dateFormat.format(fechaActual);
+        lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDia(fechaActual);
+
+        //     System.out.println("seleccionado:"+ selectedTipoHabitacion.getIdTipoHabitacion());
+    }
+
+    public void onDateSelect(SelectEvent event) {
+        onChangeTipoHabitacionSelect();
+    }
+
+    public void onChangeTipoHabitacionSelect() {
+        // System.out.println("entro, tipo habitacionseleccionada:"+selectedTipoHabitacion+" Inicio: "+selectedFechaInicio+" FIn: "+selectedFechaFin+"evento :"+event.getObject().toString());
+        if (selectedTipoHabitacion != null && selectedFechaInicio == null && selectedFechaFin == null) {
+            System.out.println("selec" + selectedTipoHabitacion);
+            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDiaAndTipoHabitacion(fechaActual, Integer.parseInt(selectedTipoHabitacion));
+            if (!lstHabitacion.isEmpty()) {
+                cabeceraTabla = "Habitaciones " + lstHabitacion.get(0).getIdTipoHabitacion().getDescripcion() + " disponibles para el " + dateFormat.format(fechaActual);
+            } else {
+                cabeceraTabla = "No existen habitaciones disponibles para estos filtros";
+            }
+            System.out.println("Tamaño lista " + lstHabitacion.size());
+        } else if (selectedTipoHabitacion != null && selectedFechaInicio != null && selectedFechaFin == null) {
+            System.out.println("entro");
+            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDiaAndTipoHabitacion(selectedFechaInicio, Integer.parseInt(selectedTipoHabitacion));
+            if (!lstHabitacion.isEmpty()) {
+                cabeceraTabla = "Habitaciones " + lstHabitacion.get(0).getIdTipoHabitacion().getDescripcion() + " disponibles para el " + dateFormat.format(selectedFechaInicio);
+            } else {
+                cabeceraTabla = "No existen habitaciones disponibles para estos filtros";
+            }
+            System.out.println("Tamaño lista " + lstHabitacion.size());
+        } else if (selectedTipoHabitacion != null && selectedFechaInicio != null && selectedFechaFin != null) {
+            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesRangoDiasAndTipoHabitacion(selectedFechaInicio, selectedFechaFin, Integer.parseInt(selectedTipoHabitacion));
+            if (!lstHabitacion.isEmpty()) {
+                cabeceraTabla = "Habitaciones " + lstHabitacion.get(0).getIdTipoHabitacion().getDescripcion() + " disponibles del " + dateFormat.format(selectedFechaInicio) + " al " + dateFormat.format(selectedFechaFin);
+            } else {
+                cabeceraTabla = "No existen habitaciones disponibles para estos filtros";
+            }
+            System.out.println("Tamaño lista " + lstHabitacion.size());
+        } else if (selectedTipoHabitacion == null && selectedFechaInicio != null && selectedFechaFin != null) {
+            System.out.println("fecha inicio y fin");
+            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesRangoDias(selectedFechaInicio, selectedFechaFin);
+            if (!lstHabitacion.isEmpty()) {
+                cabeceraTabla = "Habitaciones disponibles del " + dateFormat.format(selectedFechaInicio) + " al " + dateFormat.format(selectedFechaFin);
+            } else {
+                cabeceraTabla = "No existen habitaciones disponibles para estos filtros";
+            }
+            System.out.println("Tamaño lista " + lstHabitacion.size());
+
+        } else if (selectedTipoHabitacion == null && selectedFechaInicio != null && selectedFechaFin == null) {
+            System.out.println("solo inicio para :" + selectedFechaInicio);
+            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDia(selectedFechaInicio);
+            if (!lstHabitacion.isEmpty()) {
+                cabeceraTabla = "Habitaciones disponibles para el " + dateFormat.format(selectedFechaInicio);
+
+            } else {
+                cabeceraTabla = "No existen habitaciones disponibles para estos filtros";
+            }
+            System.out.println("Tamaño lista " + lstHabitacion.size());
+        } else {
+            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDia(fechaActual);
+        }
+    }
+
+    public Date fechaMaximaReserva() {
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(fechaActual); // Configuramos la fecha que se recibe
+
+        calendar.add(Calendar.YEAR, 1);  // numero de días a añadir, o restar en caso de días<0
+
+        return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
 
     }
-    String tamanio;
 
-    public void setTamanio(String tamanio) {
-        this.tamanio = tamanio;
+    public Date getFechaActual() {
+        return fechaActual;
     }
 
-    public String getTamanio() {
+    public void setFechaActual(Date fechaActual) {
+        this.fechaActual = fechaActual;
+    }
 
-        return tamanio;
+    public String getCabeceraTabla() {
+        return cabeceraTabla;
+    }
+
+    public void setCabeceraTabla(String cabeceraTabla) {
+        this.cabeceraTabla = cabeceraTabla;
+    }
+
+    public void setSelectedHabitaciones(List<Habitacion> selectedHabitaciones) {
+        this.selectedHabitaciones = selectedHabitaciones;
+    }
+
+    public List<Habitacion> getSelectedHabitaciones() {
+        return selectedHabitaciones;
+    }
+
+    public List<Habitacion> getLstHabitacion() {
+        return lstHabitacion;
+    }
+
+    public void setLstHabitacion(List<Habitacion> lstHabitacion) {
+        this.lstHabitacion = lstHabitacion;
+    }
+
+    public String getSelectedTipoHabitacion() {
+        return selectedTipoHabitacion;
+    }
+
+    public Date getSelectedFechaFin() {
+        return selectedFechaFin;
+    }
+
+    public void setSelectedFechaFin(Date selectedFechaFin) {
+        this.selectedFechaFin = selectedFechaFin;
+    }
+
+    public Date getSelectedFechaInicio() {
+        return selectedFechaInicio;
+    }
+
+    public void setSelectedFechaInicio(Date selectedFechaInicio) {
+        this.selectedFechaInicio = selectedFechaInicio;
+    }
+
+    public void setSelectedTipoHabitacion(String selectedTipoHabitacion) {
+        this.selectedTipoHabitacion = selectedTipoHabitacion;
+    }
+
+    public List<TipoHabitacion> getListTipoHbitacion() {
+        return listTipoHbitacion;
+    }
+
+    public void setListTipoHbitacion(List<TipoHabitacion> listTipoHbitacion) {
+        this.listTipoHbitacion = listTipoHbitacion;
     }
 
 }

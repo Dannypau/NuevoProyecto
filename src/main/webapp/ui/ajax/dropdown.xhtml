@@ -14,23 +14,23 @@
     </ui:define>
 
     <ui:define name="implementation">
-        
+
         <h:form>
             <p:growl id="msgs" showDetail="true" />
 
             <p:panel header="Select a Location" style="margin-bottom:10px;">
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:outputLabel for="country" value="Country: " />
-                    <p:selectOneMenu id="country" value="#{dropdownView.country}" style="width:150px">
-                        <p:ajax listener="#{dropdownView.onCountryChange}" update="city" />
+                    <p:selectOneMenu id="country" value="#{tipoHabitacionView.selectedTipoHabitacion}" style="width:150px">
+                        <p:ajax listener="#{tipoHabitacionView.onChangeTipoHabitacionSelect}" update="city" />
                         <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{dropdownView.countries}" />
+                        <f:selectItems value="#{tipoHabitacionView.listTipoHbitacion}" />
                     </p:selectOneMenu>
 
                     <p:outputLabel for="city" value="City: " />
                     <p:selectOneMenu id="city" value="#{dropdownView.city}" style="width:150px">
                         <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{dropdownView.cities}" />
+                        <f:selectItems value="##{tipoHabitacionView.lstHabitacion}" />
                     </p:selectOneMenu>
                 </h:panelGrid>
 
@@ -39,7 +39,7 @@
                 <p:commandButton value="Submit" update="msgs" actionListener="#{dropdownView.displayLocation}" icon="ui-icon-check" />
             </p:panel>
         </h:form>
-        
+
     </ui:define>
 
     <ui:define name="source">
