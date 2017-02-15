@@ -6,7 +6,7 @@
 package com.epn.edu.reservahotel.entidades;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -41,16 +41,11 @@ public class ExtraHabitacion implements Serializable {
     @NotNull
     @Column(name = "id_extra_habitacion")
     private Integer idExtraHabitacion;
-    @Basic(optional = false)
-    @NotNull
-    private boolean jacuzzi;
-    @Basic(optional = false)
-    @NotNull
+    private Boolean jacuzzi;
     @Column(name = "vista_al_mar")
-    private boolean vistaAlMar;
-    @Basic(optional = false)
-    @NotNull
-    private BigInteger costo;
+    private Boolean vistaAlMar;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    private BigDecimal costo;
     @OneToMany(mappedBy = "idExtraHabitacion")
     private List<Habitacion> habitacionList;
 
@@ -61,13 +56,6 @@ public class ExtraHabitacion implements Serializable {
         this.idExtraHabitacion = idExtraHabitacion;
     }
 
-    public ExtraHabitacion(Integer idExtraHabitacion, boolean jacuzzi, boolean vistaAlMar, BigInteger costo) {
-        this.idExtraHabitacion = idExtraHabitacion;
-        this.jacuzzi = jacuzzi;
-        this.vistaAlMar = vistaAlMar;
-        this.costo = costo;
-    }
-
     public Integer getIdExtraHabitacion() {
         return idExtraHabitacion;
     }
@@ -76,27 +64,27 @@ public class ExtraHabitacion implements Serializable {
         this.idExtraHabitacion = idExtraHabitacion;
     }
 
-    public boolean getJacuzzi() {
+    public Boolean getJacuzzi() {
         return jacuzzi;
     }
 
-    public void setJacuzzi(boolean jacuzzi) {
+    public void setJacuzzi(Boolean jacuzzi) {
         this.jacuzzi = jacuzzi;
     }
 
-    public boolean getVistaAlMar() {
+    public Boolean getVistaAlMar() {
         return vistaAlMar;
     }
 
-    public void setVistaAlMar(boolean vistaAlMar) {
+    public void setVistaAlMar(Boolean vistaAlMar) {
         this.vistaAlMar = vistaAlMar;
     }
 
-    public BigInteger getCosto() {
+    public BigDecimal getCosto() {
         return costo;
     }
 
-    public void setCosto(BigInteger costo) {
+    public void setCosto(BigDecimal costo) {
         this.costo = costo;
     }
 

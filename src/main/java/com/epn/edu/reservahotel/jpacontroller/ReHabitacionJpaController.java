@@ -14,15 +14,13 @@ import com.epn.edu.reservahotel.entidades.Habitacion;
 import com.epn.edu.reservahotel.entidades.ReHabitacion;
 import com.epn.edu.reservahotel.entidades.ReHabitacionPK;
 import com.epn.edu.reservahotel.entidades.Reserva;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.NonexistentEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.PreexistingEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.RollbackFailureException;
-import java.util.Date;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.NonexistentEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.PreexistingEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.RollbackFailureException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
-import static org.eclipse.persistence.sessions.remote.corba.sun.TransporterHelper.id;
 
 /**
  *
@@ -213,19 +211,6 @@ public class ReHabitacionJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             return em.find(ReHabitacion.class, id);
-        } finally {
-            em.close();
-        }
-    }
-    public List<Integer> findIdHabitacionByFecha(Date fecha) {
-        EntityManager em = getEntityManager();
-        try {
-            List<Integer> results = em.createNamedQuery("ReHabitacion.findByFechaUnDia",Integer.class)
-                        .setParameter("fechaReservaHabitacion",fecha).getResultList();
-            
-            
-
-            return (List<Integer>) results;
         } finally {
             em.close();
         }

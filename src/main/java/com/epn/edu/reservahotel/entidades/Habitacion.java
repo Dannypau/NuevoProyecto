@@ -30,9 +30,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Habitacion.findAll", query = "SELECT h FROM Habitacion h"),
     @NamedQuery(name = "Habitacion.findByIdHabitacion", query = "SELECT h FROM Habitacion h WHERE h.idHabitacion = :idHabitacion"),
-    @NamedQuery(name = "Habitacion.findByDisponibilidad", query = "SELECT h FROM Habitacion h WHERE h.disponibilidad = :disponibilidad"),
     @NamedQuery(name = "Habitacion.findByIdTipoHabitacion", query = "SELECT h FROM Habitacion h WHERE h.idTipoHabitacion.idTipoHabitacion = :idTipoHabitacion"),
     @NamedQuery(name = "Habitacion.findDisponiblesByUnDia", query = "SELECT h FROM Habitacion h WHERE h.idHabitacion NOT IN (SELECT p.reHabitacionPK.idHabitacion FROM ReHabitacion p WHERE p.reHabitacionPK.fechaReservaHabitacion=:fechaReservaHabitacion)"),
+    @NamedQuery(name = "Habitacion.findDisponiblesByUnDiaAndTipoHabitacion",query = "SELECT h FROM Habitacion h WHERE h.idHabitacion NOT IN(SELECT p.reHabitacionPK.idHabitacion FROM ReHabitacion p WHERE p.reHabitacionPK.fechaReservaHabitacion=:fechaReservaHabitacion) and h.idTipoHabitacion.idTipoHabitacion = :idTipoHabitacion"),
     @NamedQuery(name = "Habitacion.findDisponiblesByRangoDias", query = "SELECT h FROM Habitacion h WHERE h.idHabitacion NOT IN (SELECT p.reHabitacionPK.idHabitacion FROM ReHabitacion p WHERE p.reHabitacionPK.fechaReservaHabitacion between :fechaReservaHabitacionInicio and :fechaReservaHabitacionfin)"),
     @NamedQuery(name = "Habitacion.findDisponiblesByRangoDiasAndTipoHabitacion", query = "SELECT h FROM Habitacion h WHERE h.idHabitacion NOT IN (SELECT p.reHabitacionPK.idHabitacion FROM ReHabitacion p WHERE p.reHabitacionPK.fechaReservaHabitacion between :fechaReservaHabitacionInicio and :fechaReservaHabitacionfin) and h.idTipoHabitacion.idTipoHabitacion = :idTipoHabitacion"),
     @NamedQuery(name = "Habitacion.findByNumeroPiso", query = "SELECT h FROM Habitacion h WHERE h.numeroPiso = :numeroPiso")})
@@ -44,9 +44,6 @@ public class Habitacion implements Serializable {
     @NotNull
     @Column(name = "id_habitacion")
     private Integer idHabitacion;
-    @Basic(optional = false)
-    @NotNull
-    private boolean disponibilidad;
     @Basic(optional = false)
     @NotNull
     @Column(name = "numero_piso")
@@ -69,9 +66,8 @@ public class Habitacion implements Serializable {
         this.idHabitacion = idHabitacion;
     }
 
-    public Habitacion(Integer idHabitacion, boolean disponibilidad, int numeroPiso) {
+    public Habitacion(Integer idHabitacion, int numeroPiso) {
         this.idHabitacion = idHabitacion;
-        this.disponibilidad = disponibilidad;
         this.numeroPiso = numeroPiso;
     }
 
@@ -81,14 +77,6 @@ public class Habitacion implements Serializable {
 
     public void setIdHabitacion(Integer idHabitacion) {
         this.idHabitacion = idHabitacion;
-    }
-
-    public boolean getDisponibilidad() {
-        return disponibilidad;
-    }
-
-    public void setDisponibilidad(boolean disponibilidad) {
-        this.disponibilidad = disponibilidad;
     }
 
     public int getNumeroPiso() {
@@ -157,5 +145,5 @@ public class Habitacion implements Serializable {
     public String toString() {
         return "com.epn.edu.reservahotel.entidades.Habitacion[ idHabitacion=" + idHabitacion + " ]";
     }
-
+    
 }

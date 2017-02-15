@@ -10,12 +10,13 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import com.epn.edu.reservahotel.entidades.Perfil;
 import com.epn.edu.reservahotel.entidades.Reserva;
 import com.epn.edu.reservahotel.entidades.Usuario;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.IllegalOrphanException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.NonexistentEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.PreexistingEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.RollbackFailureException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.IllegalOrphanException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.NonexistentEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.PreexistingEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.RollbackFailureException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -47,6 +48,11 @@ public class UsuarioJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
+            Perfil idPerfil = usuario.getIdPerfil();
+            if (idPerfil != null) {
+                idPerfil = em.getReference(idPerfil.getClass(), idPerfil.getIdPerfil());
+                usuario.setIdPerfil(idPerfil);
+            }
             List<Reserva> attachedReservaList = new ArrayList<Reserva>();
             for (Reserva reservaListReservaToAttach : usuario.getReservaList()) {
                 reservaListReservaToAttach = em.getReference(reservaListReservaToAttach.getClass(), reservaListReservaToAttach.getIdReserva());
@@ -54,6 +60,10 @@ public class UsuarioJpaController implements Serializable {
             }
             usuario.setReservaList(attachedReservaList);
             em.persist(usuario);
+            if (idPerfil != null) {
+                idPerfil.getUsuarioList().add(usuario);
+                idPerfil = em.merge(idPerfil);
+            }
             for (Reserva reservaListReserva : usuario.getReservaList()) {
                 Usuario oldIdUsuarioOfReservaListReserva = reservaListReserva.getIdUsuario();
                 reservaListReserva.setIdUsuario(usuario);
@@ -87,6 +97,8 @@ public class UsuarioJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
+            Perfil idPerfilOld = persistentUsuario.getIdPerfil();
+            Perfil idPerfilNew = usuario.getIdPerfil();
             List<Reserva> reservaListOld = persistentUsuario.getReservaList();
             List<Reserva> reservaListNew = usuario.getReservaList();
             List<String> illegalOrphanMessages = null;
@@ -101,6 +113,10 @@ public class UsuarioJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            if (idPerfilNew != null) {
+                idPerfilNew = em.getReference(idPerfilNew.getClass(), idPerfilNew.getIdPerfil());
+                usuario.setIdPerfil(idPerfilNew);
+            }
             List<Reserva> attachedReservaListNew = new ArrayList<Reserva>();
             for (Reserva reservaListNewReservaToAttach : reservaListNew) {
                 reservaListNewReservaToAttach = em.getReference(reservaListNewReservaToAttach.getClass(), reservaListNewReservaToAttach.getIdReserva());
@@ -109,6 +125,14 @@ public class UsuarioJpaController implements Serializable {
             reservaListNew = attachedReservaListNew;
             usuario.setReservaList(reservaListNew);
             usuario = em.merge(usuario);
+            if (idPerfilOld != null && !idPerfilOld.equals(idPerfilNew)) {
+                idPerfilOld.getUsuarioList().remove(usuario);
+                idPerfilOld = em.merge(idPerfilOld);
+            }
+            if (idPerfilNew != null && !idPerfilNew.equals(idPerfilOld)) {
+                idPerfilNew.getUsuarioList().add(usuario);
+                idPerfilNew = em.merge(idPerfilNew);
+            }
             for (Reserva reservaListNewReserva : reservaListNew) {
                 if (!reservaListOld.contains(reservaListNewReserva)) {
                     Usuario oldIdUsuarioOfReservaListNewReserva = reservaListNewReserva.getIdUsuario();
@@ -129,7 +153,7 @@ public class UsuarioJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = usuario.getIdUsuario();
+                Integer id = usuario.getIdUsuario();
                 if (findUsuario(id) == null) {
                     throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
                 }
@@ -142,7 +166,7 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -164,6 +188,11 @@ public class UsuarioJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Perfil idPerfil = usuario.getIdPerfil();
+            if (idPerfil != null) {
+                idPerfil.getUsuarioList().remove(usuario);
+                idPerfil = em.merge(idPerfil);
             }
             em.remove(usuario);
             utx.commit();
@@ -205,7 +234,7 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public Usuario findUsuario(String id) {
+    public Usuario findUsuario(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Usuario.class, id);

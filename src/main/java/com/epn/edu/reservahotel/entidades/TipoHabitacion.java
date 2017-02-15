@@ -6,7 +6,7 @@
 package com.epn.edu.reservahotel.entidades;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -47,12 +47,13 @@ public class TipoHabitacion implements Serializable {
     @NotNull
     @Column(name = "numero_camas")
     private int numeroCamas;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    private BigInteger costo;
+    private BigDecimal costo;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
+    @Size(min = 1, max = 50)
     private String descripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipoHabitacion")
     private List<Habitacion> habitacionList;
@@ -64,7 +65,7 @@ public class TipoHabitacion implements Serializable {
         this.idTipoHabitacion = idTipoHabitacion;
     }
 
-    public TipoHabitacion(Integer idTipoHabitacion, int numeroCamas, BigInteger costo, String descripcion) {
+    public TipoHabitacion(Integer idTipoHabitacion, int numeroCamas, BigDecimal costo, String descripcion) {
         this.idTipoHabitacion = idTipoHabitacion;
         this.numeroCamas = numeroCamas;
         this.costo = costo;
@@ -87,11 +88,11 @@ public class TipoHabitacion implements Serializable {
         this.numeroCamas = numeroCamas;
     }
 
-    public BigInteger getCosto() {
+    public BigDecimal getCosto() {
         return costo;
     }
 
-    public void setCosto(BigInteger costo) {
+    public void setCosto(BigDecimal costo) {
         this.costo = costo;
     }
 

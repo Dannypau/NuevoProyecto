@@ -14,9 +14,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.epn.edu.reservahotel.entidades.Habitacion;
 import com.epn.edu.reservahotel.entidades.Huesped;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.NonexistentEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.PreexistingEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.RollbackFailureException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.NonexistentEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.PreexistingEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.RollbackFailureException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -43,8 +43,8 @@ public class HaHuespedJpaController implements Serializable {
         if (haHuesped.getHaHuespedPK() == null) {
             haHuesped.setHaHuespedPK(new HaHuespedPK());
         }
-        haHuesped.getHaHuespedPK().setIdHabitacion(haHuesped.getHabitacion().getIdHabitacion());
         haHuesped.getHaHuespedPK().setIdHuesped(haHuesped.getHuesped().getIdHuesped());
+        haHuesped.getHaHuespedPK().setIdHabitacion(haHuesped.getHabitacion().getIdHabitacion());
         EntityManager em = null;
         try {
             utx.begin();
@@ -87,8 +87,8 @@ public class HaHuespedJpaController implements Serializable {
     }
 
     public void edit(HaHuesped haHuesped) throws NonexistentEntityException, RollbackFailureException, Exception {
-        haHuesped.getHaHuespedPK().setIdHabitacion(haHuesped.getHabitacion().getIdHabitacion());
         haHuesped.getHaHuespedPK().setIdHuesped(haHuesped.getHuesped().getIdHuesped());
+        haHuesped.getHaHuespedPK().setIdHabitacion(haHuesped.getHabitacion().getIdHabitacion());
         EntityManager em = null;
         try {
             utx.begin();

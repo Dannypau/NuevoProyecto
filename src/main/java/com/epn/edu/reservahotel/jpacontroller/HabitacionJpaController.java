@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.epn.edu.reservahotel.entidades.HaHuesped;
 import com.epn.edu.reservahotel.entidades.Habitacion;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.IllegalOrphanException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.NonexistentEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.PreexistingEntityException;
-import com.epn.edu.reservahotel.jpacontroller.exceptions.RollbackFailureException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.IllegalOrphanException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.NonexistentEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.PreexistingEntityException;
+import com.epn.edu.reservahotel.jpacontrollers.exceptions.RollbackFailureException;
 import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -118,78 +118,6 @@ public class HabitacionJpaController implements Serializable {
             if (em != null) {
                 em.close();
             }
-        }
-    }
-
-    public List<Habitacion> findHabitacionbyTypeHabitacionId(Integer id) {
-        EntityManager em = getEntityManager();
-        try {
-            List<Habitacion> results = em.createNamedQuery("Habitacion.findByIdTipoHabitacion", Habitacion.class)
-                    .setParameter("idTipoHabitacion", id).getResultList();
-
-            return (List<Habitacion>) results;
-
-        } finally {
-            em.close();
-        }
-    }
-
-    public List<Habitacion> findHabitacionesDisponiblesUnDia(Date fechaActual) {
-        EntityManager em = getEntityManager();
-        try {
-
-            List<Habitacion> results = em.createNamedQuery("Habitacion.findDisponiblesByUnDia", Habitacion.class)
-                    .setParameter("fechaReservaHabitacion", fechaActual).getResultList();
-
-            return (List<Habitacion>) results;
-
-        } finally {
-            em.close();
-        }
-    }
-
-    public List<Habitacion> findHabitacionesDisponiblesUnDiaAndTipoHabitacion(Date fechaActual, Integer idTipoHabitacion) {
-        EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNamedQuery("Habitacion.findDisponiblesByUnDiaAndTipoHabitacion", Habitacion.class);
-            query.setParameter("fechaReservaHabitacion", fechaActual);
-            query.setParameter("idTipoHabitacion", idTipoHabitacion);
-            List<Habitacion> results = query.getResultList();
-
-            return (List<Habitacion>) results;
-
-        } finally {
-            em.close();
-        }
-    }
-
-    public List<Habitacion> findHabitacionesDisponiblesRangoDias(Date fechaInicio, Date fechaFin) {
-        EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNamedQuery("Habitacion.findDisponiblesByRangoDias", Habitacion.class);
-            query.setParameter("fechaReservaHabitacionInicio", fechaInicio);
-            query.setParameter("fechaReservaHabitacionfin", fechaFin);
-            List<Habitacion> results = query.getResultList();
-
-            return (List<Habitacion>) results;
-
-        } finally {
-            em.close();
-        }
-    }
-    public List<Habitacion> findHabitacionesDisponiblesRangoDiasAndTipoHabitacion(Date fechaInicio, Date fechaFin,Integer idTipoHabitacion) {
-        EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNamedQuery("Habitacion.findDisponiblesByRangoDiasAndTipoHabitacion", Habitacion.class);
-            query.setParameter("fechaReservaHabitacionInicio", fechaInicio);
-            query.setParameter("fechaReservaHabitacionfin", fechaFin);
-            query.setParameter("idTipoHabitacion", idTipoHabitacion);
-            List<Habitacion> results = query.getResultList();
-
-            return (List<Habitacion>) results;
-
-        } finally {
-            em.close();
         }
     }
 
@@ -411,5 +339,77 @@ public class HabitacionJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Habitacion> findHabitacionbyTypeHabitacionId(Integer id) {
+        EntityManager em = getEntityManager();
+        try {
+            List<Habitacion> results = em.createNamedQuery("Habitacion.findByIdTipoHabitacion", Habitacion.class)
+                    .setParameter("idTipoHabitacion", id).getResultList();
 
+            return (List<Habitacion>) results;
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Habitacion> findHabitacionesDisponiblesUnDia(Date fechaActual) {
+        EntityManager em = getEntityManager();
+        try {
+
+            List<Habitacion> results = em.createNamedQuery("Habitacion.findDisponiblesByUnDia", Habitacion.class)
+                    .setParameter("fechaReservaHabitacion", fechaActual).getResultList();
+
+            return (List<Habitacion>) results;
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Habitacion> findHabitacionesDisponiblesUnDiaAndTipoHabitacion(Date fechaActual, Integer idTipoHabitacion) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Habitacion.findDisponiblesByUnDiaAndTipoHabitacion", Habitacion.class);
+            query.setParameter("fechaReservaHabitacion", fechaActual);
+            query.setParameter("idTipoHabitacion", idTipoHabitacion);
+            List<Habitacion> results = query.getResultList();
+
+            return (List<Habitacion>) results;
+
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Habitacion> findHabitacionesDisponiblesRangoDias(Date fechaInicio, Date fechaFin) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Habitacion.findDisponiblesByRangoDias", Habitacion.class);
+            query.setParameter("fechaReservaHabitacionInicio", fechaInicio);
+            query.setParameter("fechaReservaHabitacionfin", fechaFin);
+            List<Habitacion> results = query.getResultList();
+
+            return (List<Habitacion>) results;
+
+        } finally {
+            em.close();
+        }
+    }
+    public List<Habitacion> findHabitacionesDisponiblesRangoDiasAndTipoHabitacion(Date fechaInicio, Date fechaFin,Integer idTipoHabitacion) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Habitacion.findDisponiblesByRangoDiasAndTipoHabitacion", Habitacion.class);
+            query.setParameter("fechaReservaHabitacionInicio", fechaInicio);
+            query.setParameter("fechaReservaHabitacionfin", fechaFin);
+            query.setParameter("idTipoHabitacion", idTipoHabitacion);
+            List<Habitacion> results = query.getResultList();
+
+            return (List<Habitacion>) results;
+
+        } finally {
+            em.close();
+        }
+    }
+    
 }

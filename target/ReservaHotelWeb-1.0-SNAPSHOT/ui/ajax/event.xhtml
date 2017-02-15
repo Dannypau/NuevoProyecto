@@ -6,14 +6,23 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="title">
-        Ajax Framework - <span class="subitem">Events</span>
+        Informacion:  <span class="subitem"></span>
     </ui:define>
 
     <ui:define name="description">
-        p:ajax enables ajax features on supported components.
+        PRINCE OF PERSIA ES UN HOTEL DE 5 ESTRELLAS, UBICADO CERCA DEL MAR, QUE OFRECE LAS MEJORES COMMODIDADES AL SUS VISITANTES.
+        
+    
+        RESERVA AHORA!.
+        
     </ui:define>
+    
+    <ui:define name ="implementation">
+        <p:gmap center="41.381542, 2.122893" zoom="15" type="HYBRID" style="width:100%;height:400px" />
+    </ui:define>
+    
 
-    <ui:define name="implementation">
+<!--    <ui:define name="implementation">
         
         <h:form>
             <h:panelGrid columns="3" cellpadding="5">
@@ -31,9 +40,9 @@
             </h:panelGrid>
         </h:form>
         
-    </ui:define>
+    </ui:define>-->
 
-    <ui:define name="source">
+<!--    <ui:define name="source">
         <p:tabView>
             <p:tab title="event.xhtml">
                 <pre name="code" class="brush:xml">
@@ -57,38 +66,11 @@
 
             <p:tab title="UserView.java">
                 <pre name="code" class="brush:java">
-package org.primefaces.showcase.view.ajax;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-
-@ManagedBean
-public class UserView {
-    
-    private String firstname;
-	private String lastname;
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-}
+hola
                 </pre>
             </p:tab>
         </p:tabView>
 
-    </ui:define>
+    </ui:define>-->
 
 </ui:composition>

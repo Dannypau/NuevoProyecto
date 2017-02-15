@@ -15,6 +15,7 @@ import com.epn.edu.reservahotel.jpacontroller.HabitacionJpaController;
 import com.epn.edu.reservahotel.jpacontroller.ReHabitacionJpaController;
 import com.epn.edu.reservahotel.jpacontroller.TipoHabitacionJpaController;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,11 +37,30 @@ public class TipoHabitacionView implements Serializable {
     private List<Habitacion> lstHabitacion;
     private String selectedTipoHabitacion;
     private Date selectedFechaInicio;
+    private String fechasSeleccionadas;
+
+    public String getFechasSeleccionadas() {
+        return fechasSeleccionadas;
+    }
+
+    public void setFechasSeleccionadas(String fechasSeleccionadas) {
+        this.fechasSeleccionadas = fechasSeleccionadas;
+    }
     private Date selectedFechaFin;
     private Date fechaActual;
     private String cabeceraTabla;
     private List<Habitacion> selectedHabitaciones;
     private SimpleDateFormat dateFormat;
+    private BigDecimal costoTotal;
+    
+
+    public BigDecimal getCostoTotal() {
+        return costoTotal;
+    }
+
+    public void setCostoTotal(BigDecimal costoTotal) {
+        this.costoTotal = costoTotal;
+    }
     List<Integer> lstIdHabitacionesDisponibles;
     TipoHabitacionJpaController tipoHabitacionJpaController;
     ReHabitacionJpaController reHabitacionJpaController;
@@ -83,7 +103,8 @@ public class TipoHabitacionView implements Serializable {
         // System.out.println("entro, tipo habitacionseleccionada:"+selectedTipoHabitacion+" Inicio: "+selectedFechaInicio+" FIn: "+selectedFechaFin+"evento :"+event.getObject().toString());
         if (selectedTipoHabitacion != null && selectedFechaInicio == null && selectedFechaFin == null) {
             System.out.println("selec" + selectedTipoHabitacion);
-            lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDiaAndTipoHabitacion(fechaActual, Integer.parseInt(selectedTipoHabitacion));
+            lstHabitacion = habitacionJpaController.findHabitacionbyTypeHabitacionId( Integer.parseInt(selectedTipoHabitacion));
+            fechasSeleccionadas = dateFormat.format(fechaActual);
             if (!lstHabitacion.isEmpty()) {
                 cabeceraTabla = "Habitaciones " + lstHabitacion.get(0).getIdTipoHabitacion().getDescripcion() + " disponibles para el " + dateFormat.format(fechaActual);
             } else {
@@ -93,6 +114,7 @@ public class TipoHabitacionView implements Serializable {
         } else if (selectedTipoHabitacion != null && selectedFechaInicio != null && selectedFechaFin == null) {
             System.out.println("entro");
             lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDiaAndTipoHabitacion(selectedFechaInicio, Integer.parseInt(selectedTipoHabitacion));
+            fechasSeleccionadas = dateFormat.format(selectedFechaInicio);
             if (!lstHabitacion.isEmpty()) {
                 cabeceraTabla = "Habitaciones " + lstHabitacion.get(0).getIdTipoHabitacion().getDescripcion() + " disponibles para el " + dateFormat.format(selectedFechaInicio);
             } else {
@@ -101,6 +123,7 @@ public class TipoHabitacionView implements Serializable {
             System.out.println("Tamaño lista " + lstHabitacion.size());
         } else if (selectedTipoHabitacion != null && selectedFechaInicio != null && selectedFechaFin != null) {
             lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesRangoDiasAndTipoHabitacion(selectedFechaInicio, selectedFechaFin, Integer.parseInt(selectedTipoHabitacion));
+            fechasSeleccionadas = dateFormat.format(selectedFechaInicio) + " al " + dateFormat.format(selectedFechaFin);
             if (!lstHabitacion.isEmpty()) {
                 cabeceraTabla = "Habitaciones " + lstHabitacion.get(0).getIdTipoHabitacion().getDescripcion() + " disponibles del " + dateFormat.format(selectedFechaInicio) + " al " + dateFormat.format(selectedFechaFin);
             } else {
@@ -110,6 +133,7 @@ public class TipoHabitacionView implements Serializable {
         } else if (selectedTipoHabitacion == null && selectedFechaInicio != null && selectedFechaFin != null) {
             System.out.println("fecha inicio y fin");
             lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesRangoDias(selectedFechaInicio, selectedFechaFin);
+            fechasSeleccionadas = dateFormat.format(selectedFechaInicio) + " al " + dateFormat.format(selectedFechaFin);
             if (!lstHabitacion.isEmpty()) {
                 cabeceraTabla = "Habitaciones disponibles del " + dateFormat.format(selectedFechaInicio) + " al " + dateFormat.format(selectedFechaFin);
             } else {
@@ -120,6 +144,7 @@ public class TipoHabitacionView implements Serializable {
         } else if (selectedTipoHabitacion == null && selectedFechaInicio != null && selectedFechaFin == null) {
             System.out.println("solo inicio para :" + selectedFechaInicio);
             lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDia(selectedFechaInicio);
+            fechasSeleccionadas = dateFormat.format(selectedFechaInicio);
             if (!lstHabitacion.isEmpty()) {
                 cabeceraTabla = "Habitaciones disponibles para el " + dateFormat.format(selectedFechaInicio);
 
@@ -129,6 +154,7 @@ public class TipoHabitacionView implements Serializable {
             System.out.println("Tamaño lista " + lstHabitacion.size());
         } else {
             lstHabitacion = habitacionJpaController.findHabitacionesDisponiblesUnDia(fechaActual);
+             fechasSeleccionadas = dateFormat.format(fechaActual);
         }
     }
 
@@ -161,6 +187,12 @@ public class TipoHabitacionView implements Serializable {
     }
 
     public void setSelectedHabitaciones(List<Habitacion> selectedHabitaciones) {
+        costoTotal = BigDecimal.ZERO;
+        for (Habitacion habitacion : selectedHabitaciones) {
+            BigDecimal valorHabitacion = habitacion.getIdTipoHabitacion().getCosto();
+            BigDecimal valorExtras = habitacion.getIdExtraHabitacion().getCosto();
+            costoTotal = costoTotal.add(valorExtras).add(valorHabitacion);
+        }
         this.selectedHabitaciones = selectedHabitaciones;
     }
 

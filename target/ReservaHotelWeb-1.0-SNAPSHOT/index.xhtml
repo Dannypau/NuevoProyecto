@@ -52,7 +52,7 @@
                 <f:facet name="header">
                     #{tipoHabitacionView.cabeceraTabla}
                 </f:facet>
-                <p:column headerText="Id">
+                <p:column headerText="Número de habitación">
                     <h:outputText value="#{habitacion.idHabitacion}" />
                 </p:column>
                 <p:column headerText="Jacuzzi" >
@@ -61,21 +61,29 @@
                 <p:column headerText="Vista al Mar">
                     <p:selectBooleanCheckbox value="#{habitacion.idExtraHabitacion.vistaAlMar}" disabled="true"/>
                 </p:column>
+                <p:column headerText="Número de camas">
+                    <h:outputText value="#{habitacion.idTipoHabitacion.numeroCamas}" />
+                </p:column>
+                <p:column headerText="Número de piso">
+                    <h:outputText value="#{habitacion.numeroPiso}" />
+                </p:column>
                 <p:column headerText="Precio">
                     <h:outputText value="#{habitacion.idTipoHabitacion.costo}" />
                 </p:column>
                 <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                 <f:facet name="footer">
-                    <p:commandButton process="listaHabitaciones" update=":tabla:habitacionDetail" icon="ui-icon-search" value="Reserva" oncomplete="PF('habitacionDialog').show()" />
+                    <p:commandButton process="listaHabitaciones"  update=":tabla:habitacionDetail" icon="ui-icon-search" value="Reserva" oncomplete="PF('habitacionDialog').show()" />
                 </f:facet>
             </p:dataTable>
             <p:dialog header="Información Reserva" widgetVar="habitacionDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="habitacionDetail" style="text-align:center;">
+                    <p:outputLabel value="Fecha:#{tipoHabitacionView.fechasSeleccionadas}"/>
                     <ui:repeat value="#{tipoHabitacionView.selectedHabitaciones}" var="habitacion">
-                        <h:outputText value="Habitación: #{habitacion.idHabitacion} - Costo: #{habitacion.idTipoHabitacion.costo}" style="display:block"/>
+                       <h:outputText value="Habitación: #{habitacion.idHabitacion} - Costo: #{habitacion.idTipoHabitacion.costo} - ValorExtras #{habitacion.idExtraHabitacion.costo}"  style="display:block"/>
                     </ui:repeat>
+                    <p:outputLabel value="Valor Total:#{tipoHabitacionView.costoTotal}"/>
                     
-                    <p:commandButton value="Reservar"/>
+                    <p:commandButton value="Reservar" style="right"/>
                     
                 </p:outputPanel>
             </p:dialog>
