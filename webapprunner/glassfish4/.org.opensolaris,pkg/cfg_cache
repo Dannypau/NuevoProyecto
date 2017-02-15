@@ -18,7 +18,7 @@ repo.registration_uri = None
 repo.collection_type = core
 repo.refresh_seconds = 14400
 
-uuid = 2edd77c1-ff0d-4842-a363-9e2569bc9022
+uuid = b7c8a417-ddf2-4d30-bd9d-3646e28da7bc
 
 [variant]
 variant.opensolaris.zone = global
@@ -41,7 +41,7 @@ repo.registration_uri = None
 repo.collection_type = core
 repo.refresh_seconds = None
 
-uuid = 2edd77c1-ff0d-4842-a363-9e2569bc9022
+uuid = b7c8a417-ddf2-4d30-bd9d-3646e28da7bc
 
 [property]
 display-copyrights = True

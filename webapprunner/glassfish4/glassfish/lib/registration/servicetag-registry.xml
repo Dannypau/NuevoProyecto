@@ -41,7 +41,7 @@
 
 --><registry>
   <service_tag>
-    <instance_urn>urn:st:2edd77c1-ff0d-4842-a363-9e2569bc9022</instance_urn>
+    <instance_urn>urn:st:b7c8a417-ddf2-4d30-bd9d-3646e28da7bc</instance_urn>
     <product_name>GlassFish Server Open Source Edition</product_name>
     <product_version>4.1</product_version>
     <product_urn>urn:uuid:05617256-0677-11dd-8282-080020a9ed93</product_urn>
