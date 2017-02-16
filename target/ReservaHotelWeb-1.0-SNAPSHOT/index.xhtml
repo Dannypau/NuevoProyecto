@@ -79,12 +79,16 @@
                 <p:outputPanel id="habitacionDetail" style="text-align:center;">
                     <p:outputLabel value="Fecha:#{tipoHabitacionView.fechasSeleccionadas}"/>
                     <ui:repeat value="#{tipoHabitacionView.selectedHabitaciones}" var="habitacion">
-                       <h:outputText value="Habitación: #{habitacion.idHabitacion} - Costo: #{habitacion.idTipoHabitacion.costo} - ValorExtras #{habitacion.idExtraHabitacion.costo}"  style="display:block"/>
+                        <h:outputText value="Habitación: #{habitacion.idHabitacion} - Costo: #{habitacion.idTipoHabitacion.costo} - ValorExtras #{habitacion.idExtraHabitacion.costo}"  style="display:block"/>
                     </ui:repeat>
-                    <p:outputLabel value="Valor Total:#{tipoHabitacionView.costoTotal}"/>
-                    
-                    <p:commandButton value="Reservar" style="right"/>
-                    
+                    <p:outputLabel style="columns: 1" value="Valor Total:#{tipoHabitacionView.costoTotal}"/>
+                    <h:outputText  style="columns: 2" value="Desayuno: " />
+                    <p:selectBooleanCheckbox  value="#{selectBooleanView.value1}" />
+                    <h:outputText value="Parqueadero: " />
+                    <p:selectBooleanCheckbox style="columns: 5" value="#{selectBooleanView.value1}" />
+
+<!--                    <p:commandButton value="Reservar" style="right" actionListener="#{tipoHabitacionView.registroRerservaHabitacion}"/>-->
+
                 </p:outputPanel>
             </p:dialog>
         </h:form>

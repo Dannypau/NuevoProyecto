@@ -72,6 +72,7 @@ public class ReservaJpaController implements Serializable {
             }
             if (idUsuario != null) {
                 idUsuario.getReservaList().add(reserva);
+               
                 idUsuario = em.merge(idUsuario);
             }
             for (ReHabitacion reHabitacionListReHabitacion : reserva.getReHabitacionList()) {

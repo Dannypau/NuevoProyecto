@@ -13,6 +13,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -42,8 +44,8 @@ public class Reserva implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id_reserva")
     private Integer idReserva;
     @Basic(optional = false)
@@ -67,10 +69,10 @@ public class Reserva implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reserva")
     private List<ReHabitacion> reHabitacionList;
     @JoinColumn(name = "id_servicio", referencedColumnName = "id_servicio")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Servicio idServicio;
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Usuario idUsuario;
 
     public Reserva() {

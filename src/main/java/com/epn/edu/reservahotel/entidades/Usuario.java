@@ -8,7 +8,6 @@ package com.epn.edu.reservahotel.entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -34,7 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByNombreUsuario", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario"),
     @NamedQuery(name = "Usuario.findByCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo"),
     @NamedQuery(name = "Usuario.findByDireccion", query = "SELECT u FROM Usuario u WHERE u.direccion = :direccion"),
-    @NamedQuery(name = "Usuario.findByTelefono", query = "SELECT u FROM Usuario u WHERE u.telefono = :telefono")})
+    @NamedQuery(name = "Usuario.findByTelefono", query = "SELECT u FROM Usuario u WHERE u.telefono = :telefono"),
+    @NamedQuery(name = "Usuario.findByContrasena", query = "SELECT u FROM Usuario u WHERE u.contrasena = :contrasena")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,10 +54,14 @@ public class Usuario implements Serializable {
     private String direccion;
     @Size(max = 13)
     private String telefono;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    private String contrasena;
     @JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil")
     @ManyToOne(optional = false)
     private Perfil idPerfil;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
+    @OneToMany(mappedBy = "idUsuario")
     private List<Reserva> reservaList;
 
     public Usuario() {
@@ -67,9 +71,10 @@ public class Usuario implements Serializable {
         this.idUsuario = idUsuario;
     }
 
-    public Usuario(Integer idUsuario, String nombreUsuario) {
+    public Usuario(Integer idUsuario, String nombreUsuario, String contrasena) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
+        this.contrasena = contrasena;
     }
 
     public Integer getIdUsuario() {
@@ -110,6 +115,14 @@ public class Usuario implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public Perfil getIdPerfil() {

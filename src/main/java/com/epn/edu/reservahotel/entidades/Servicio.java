@@ -6,9 +6,9 @@
 package com.epn.edu.reservahotel.entidades;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -29,7 +29,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Servicio.findAll", query = "SELECT s FROM Servicio s"),
     @NamedQuery(name = "Servicio.findByIdServicio", query = "SELECT s FROM Servicio s WHERE s.idServicio = :idServicio"),
     @NamedQuery(name = "Servicio.findByDesayuno", query = "SELECT s FROM Servicio s WHERE s.desayuno = :desayuno"),
-    @NamedQuery(name = "Servicio.findByParqueadero", query = "SELECT s FROM Servicio s WHERE s.parqueadero = :parqueadero")})
+    @NamedQuery(name = "Servicio.findByParqueadero", query = "SELECT s FROM Servicio s WHERE s.parqueadero = :parqueadero"),
+    @NamedQuery(name = "Servicio.findByCosto", query = "SELECT s FROM Servicio s WHERE s.costo = :costo")})
 public class Servicio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +45,10 @@ public class Servicio implements Serializable {
     @Basic(optional = false)
     @NotNull
     private boolean parqueadero;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idServicio")
+    @Basic(optional = false)
+    @NotNull
+    private BigInteger costo;
+    @OneToMany(mappedBy = "idServicio")
     private List<Reserva> reservaList;
 
     public Servicio() {
@@ -54,10 +58,11 @@ public class Servicio implements Serializable {
         this.idServicio = idServicio;
     }
 
-    public Servicio(Integer idServicio, boolean desayuno, boolean parqueadero) {
+    public Servicio(Integer idServicio, boolean desayuno, boolean parqueadero, BigInteger costo) {
         this.idServicio = idServicio;
         this.desayuno = desayuno;
         this.parqueadero = parqueadero;
+        this.costo = costo;
     }
 
     public Integer getIdServicio() {
@@ -82,6 +87,14 @@ public class Servicio implements Serializable {
 
     public void setParqueadero(boolean parqueadero) {
         this.parqueadero = parqueadero;
+    }
+
+    public BigInteger getCosto() {
+        return costo;
+    }
+
+    public void setCosto(BigInteger costo) {
+        this.costo = costo;
     }
 
     @XmlTransient
