@@ -1,1 +1,1 @@
-web:  ./webapprunner/glassfish4/glassfish/bin/asadmin stop-domain;  mv target/ReservaHotelWeb-1.0-SNAPSHOT.war webapprunner/glassfish4/glassfish/domains/domain1/autodeploy; ./webapprunner/glassfish4/glassfish/bin/asadmin start-domain
+web: sudo su; ./webapprunner/glassfish4/glassfish/bin/asadmin stop-domain;  mv target/ReservaHotelWeb-1.0-SNAPSHOT.war webapprunner/glassfish4/glassfish/domains/domain1/autodeploy; ./webapprunner/glassfish4/glassfish/bin/asadmin start-domain
