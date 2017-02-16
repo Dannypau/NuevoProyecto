@@ -228,7 +228,7 @@
     </server>
   </servers>
   <nodes>
-    <node node-host="OPENSHIFT_DIY_IP" name="localhost-domain1" type="CONFIG" install-dir="${com.sun.aas.productRoot}"></node>
+    <node node-host="localhost" name="localhost-domain1" type="CONFIG" install-dir="${com.sun.aas.productRoot}"></node>
   </nodes>
   <configs>
     <config name="server-config">
@@ -249,7 +249,7 @@
         </iiop-listener>
       </iiop-service-->
       <admin-service system-jmx-connector-name="system" type="das-and-server">
-        <jmx-connector port="7600" address="OPENSHIFT_DIY_IP" security-enabled="false" auth-realm-name="admin-realm" name="system"></jmx-connector>
+        <jmx-connector port="7600" address="localhost" security-enabled="false" auth-realm-name="admin-realm" name="system"></jmx-connector>
         <property name="adminConsoleContextRoot" value="/admin"></property>
         <property name="adminConsoleDownloadLocation" value="${com.sun.aas.installRoot}/lib/install/applications/admingui.war"></property>
         <property name="ipsRoot" value="${com.sun.aas.installRoot}/.."></property>
@@ -259,7 +259,7 @@
       <transaction-service tx-log-dir="${com.sun.aas.instanceRoot}/logs"></transaction-service>
       <batch-runtime-configuration></batch-runtime-configuration>
       <jms-service default-jms-host="default_JMS_host" type="EMBEDDED">
-        <jms-host port="5445" host="OPENSHIFT_DIY_IP" name="default_JMS_host"></jms-host>
+        <jms-host port="5445" host="localhost" name="default_JMS_host"></jms-host>
       </jms-service>
       <cdi-service></cdi-service>
       <ejb-container>
@@ -356,7 +356,7 @@
         <jvm-options>-Dorg.glassfish.additionalOSGiBundlesToStart=org.apache.felix.shell,org.apache.felix.gogo.runtime,org.apache.felix.gogo.shell,org.apache.felix.gogo.command,org.apache.felix.shell.remote,org.apache.felix.fileinstall</jvm-options>
         <jvm-options>-Dosgi.shell.telnet.port=6666</jvm-options>
         <jvm-options>-Dosgi.shell.telnet.maxconn=1</jvm-options>
-        <jvm-options>-Dosgi.shell.telnet.ip=OPENSHIFT_DIY_IP</jvm-options>
+        <jvm-options>-Dosgi.shell.telnet.ip=localhost</jvm-options>
         <jvm-options>-Dgosh.args=--nointeractive</jvm-options>
         <jvm-options>-Dfelix.fileinstall.dir=${com.sun.aas.installRoot}/modules/autostart/</jvm-options>
         <jvm-options>-Dfelix.fileinstall.poll=5000</jvm-options>
@@ -386,7 +386,7 @@
           </protocol>
         </protocols>
         <network-listeners>
-          <network-listener address="OPENSHIFT_DIY_IP" port="8080" protocol="http-listener-1" transport="tcp" name="http-listener-1" thread-pool="http-thread-pool"></network-listener>
+          <network-listener address="localhost" port="80" protocol="http-listener-1" transport="tcp" name="http-listener-1" thread-pool="http-thread-pool"></network-listener>
           <!--network-listener port="8181" protocol="http-listener-2" transport="tcp" name="http-listener-2" thread-pool="http-thread-pool"></network-listener-->
           <!--network-listener port="4848" protocol="admin-listener" transport="tcp" name="admin-listener" thread-pool="admin-thread-pool"></network-listener-->
         </network-listeners>
@@ -523,7 +523,7 @@
         <jvm-options>-Dorg.glassfish.additionalOSGiBundlesToStart=org.apache.felix.shell,org.apache.felix.gogo.runtime,org.apache.felix.gogo.shell,org.apache.felix.gogo.command,org.apache.felix.fileinstall</jvm-options>
         <jvm-options>-Dosgi.shell.telnet.port=${OSGI_SHELL_TELNET_PORT}</jvm-options>
         <jvm-options>-Dosgi.shell.telnet.maxconn=1</jvm-options>
-        <jvm-options>-Dosgi.shell.telnet.ip=OPENSHIFT_DIY_IP</jvm-options>
+        <jvm-options>-Dosgi.shell.telnet.ip=localhost</jvm-options>
         <jvm-options>-Dgosh.args=--noshutdown -c noop=true</jvm-options>
         <jvm-options>-Dfelix.fileinstall.dir=${com.sun.aas.installRoot}/modules/autostart/</jvm-options>
         <jvm-options>-Dfelix.fileinstall.poll=5000</jvm-options>
@@ -572,7 +572,7 @@
           </protocol>
         </protocols>
         <network-listeners>
-          <network-listener address="OPENSHIFT_DIY_IP" port="9999" protocol="http-listener-1" transport="tcp" name="http-listener-1" thread-pool="http-thread-pool"></network-listener>
+          <network-listener address="localhost" port="9999" protocol="http-listener-1" transport="tcp" name="http-listener-1" thread-pool="http-thread-pool"></network-listener>
           <!--network-listener port="${HTTP_SSL_LISTENER_PORT}" protocol="http-listener-2" transport="tcp" name="http-listener-2" thread-pool="http-thread-pool"></network-listener-->
           <!--network-listener port="${ASADMIN_LISTENER_PORT}" protocol="pu-protocol" transport="tcp" name="admin-listener" thread-pool="http-thread-pool"></network-listener-->
         </network-listeners>
